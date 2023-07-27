@@ -1,10 +1,11 @@
-import fs from "fs";
+import crypto from "crypto";
 
-const readableStream = fs.createReadStream("./file.txt", { encoding : "utf-8", highWaterMark: 2});
+const max_calls = 3;
 
-const writeableStream = fs.createWriteStream("./file2.txt");
+const start = Date.now();
 
-readableStream.on("data", (chunk) => {
-    console.log(chunk);
-    writeableStream.write(chunk);
-})
+for(let i = 0; i < max_calls;  i++){
+    crypto.pbkdf2("password", "salt",10000, 512, "sha512", () => {
+        console.log(`hash: ${i+1}`, Date.now() - start);
+    })
+}
